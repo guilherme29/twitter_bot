@@ -1,0 +1,26 @@
+{
+  "name": "twitter_bot",
+  "version": "1.0.0",
+  "description": "a twitter bot demo",
+  "main": "bot.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/guilherme29/twitter_bot.git"
+  },
+  "keywords": [
+    "twitter",
+    "bot"
+  ],
+  "author": "Guilherme Martins",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/guilherme29/twitter_bot/issues"
+  },
+  "homepage": "https://github.com/guilherme29/twitter_bot#readme",
+  "dependencies": {
+    "twit": "^2.2.11"
+  }
+}
