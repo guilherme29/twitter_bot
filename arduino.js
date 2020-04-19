@@ -1,9 +1,7 @@
 var five = require('johnny-five');
+var m = require('./moisture_sensor.js');
 var board = new five.Board();
 
-var moist_value = board.on("ready", getMoisture());
-	//console.log("Connect and ready!");
-  //var whatever = require('./moist_sensor.js');
-	console.log("moist_value:" + moist_value);
-
+board.on("ready", function(){
+	console.log("moist_value: ", m.getMoisture();)
 });

@@ -1,5 +1,5 @@
-
-getMoisture(){
+var five = require('johnny-five');
+function getMoisture(){
   var moist = new five.Sensor({
     pin: "A0",
     freq: null,
@@ -13,3 +13,5 @@ getMoisture(){
     return value;
   });
 }
+
+module.exports = {getMoisture};
