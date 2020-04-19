@@ -42,6 +42,7 @@ node bot.js
 Your plant's bot should be 'up and running'!
 
 ## Credits
-This project was made by [zeterd][1] and [myself][2].
+This project was made by [zeterd][4] and [guilherme29][5].
 
-[1]
+[4]: https://github.com/Zeterd
+[5]: https://github.com/guilherme29
