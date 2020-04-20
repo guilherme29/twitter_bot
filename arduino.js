@@ -1,7 +1,14 @@
 var five = require('johnny-five');
 var m = require('./moisture_sensor.js');
-var board = new five.Board();
+var l = require('./light_sensor.js');
+
+var board = new five.Board({
+	port: '/dev/ttyUSB0'
+});
 
 board.on("ready", function(){
-	console.log("moist_value: ", m.getMoisture();)
+  setInterval(function(){
+		m.getMoisture(function(value){console.log("Moisture level: ", value)});
+		l.getLight(function(value){console.log("Light intensity: ", value)});
+	}, 3000);
 });
