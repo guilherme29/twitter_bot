@@ -17,8 +17,11 @@ function getLight(callback){
   light.on("data", function(){
     callback(this.value);
     light.disable();
-  });
 
+  });
 }
 
 module.exports = {getLight};
+
+
+
