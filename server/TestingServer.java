@@ -1,3 +1,5 @@
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -5,6 +7,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import static java.lang.Thread.sleep;
 
 public class TestingServer {
     public static void main(String[] args) throws ParseException {
@@ -30,94 +34,51 @@ public class TestingServer {
     private static class MyTimeTask extends TimerTask {
 
         public void run() {
-            runTests();
+            testArduino();
+            testRaspberry();
+            while(!isFileEmpty("../test_results/raspberry_tests")){
+                try {
+                    sleep(12_000);
+                    testRaspberry();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 
-    private static void runTests() {
+    private static void testArduino() {
         try {
-            String command = "./generate_tests.sh";
+            String command = "test_arduino.sh";
             Runtime.getRuntime().exec(command);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-}
 
-//
-//    /**
-//     * Method to fake tests just for testing
-//     * @return Fake test results
-//     */
-//    private static float[] getFakeTests(){
-//        float[] tests = new float[4];
-//        float moisture = 53;
-//        float light = 91;
-//        float humidity = 56;
-//        float temperature = 24;
-//
-//        tests[0] = moisture;
-//        tests[1] = light;
-//        tests[2] = humidity;
-//        tests[3] = temperature;
-//        return tests;
-//    }
-//
-//    /**
-//     * Runs the testing script and gets the test results.
-//     * The order of the tests is as follows: moisture soil level, light intensity, humidity, temperature.
-//     * @return Test results.
-//     */
-//    private static float[] getTests(){
-//        String testResults = "";
-//        String[] testResultsArray = new String[1];
-//        while(testResultsArray.length < 7) {
-//            try {
-//
-//                String command = "./generate_tests.sh";
-//                Process bash_script = Runtime.getRuntime().exec(command);
-//                sleep(10000);
-//
-//                testResults = readFile("test_results.txt");
-//
-//            } catch (IOException | InterruptedException e) {
-//                e.printStackTrace();
-//            }
-//
-//
-//            //System.out.println("LEU : " + testResults);
-//
-//            testResultsArray = testResults.split("\n");
-//
-//        }
-//        float[] tests = new float[4];
-//
-//
-//        tests[0] = Float.parseFloat(testResultsArray[3]);
-//        tests[1] = Float.parseFloat(testResultsArray[4]);
-//        tests[2] = Float.parseFloat(testResultsArray[5]);
-//        tests[3] = Float.parseFloat(testResultsArray[6]);
-//
-//        //System.out.println("--->" + tests[0] + " " + tests[1] + " " + tests[2] + " " + tests[3]);
-//
-//        return tests;
-//    }
-//
-//    /**
-//     * Given a filename reads the file contents.
-//     * @param requestFileName Filename or path to file we want to read.
-//     * @return String with file contents.
-//     */
-//    private static String readFile(String requestFileName){
-//        try {
-//            Path path = Paths.get(requestFileName);
-//            return Files.readString(path, Charset.defaultCharset());
-//        }
-//        catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        return null;
-//    }
-//
-//
-//}
+    private static void testRaspberry() {
+        try {
+            String command = "test_raspberry.sh";
+            Runtime.getRuntime().exec(command);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Given the path to a file checks if the file is empty.
+     * @return True if file is empty, false if not.
+     */
+    private static boolean isFileEmpty(String pathToFile){
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(pathToFile));
+            if (br.readLine() == null) {
+                return true;
+            }
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+}
