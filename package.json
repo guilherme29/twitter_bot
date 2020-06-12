@@ -21,7 +21,9 @@
   },
   "homepage": "https://github.com/guilherme29/twitter_bot#readme",
   "dependencies": {
+    "fs": "0.0.1-security",
     "node-dht-sensor": "^0.4.1",
+    "sleep": "^6.2.0",
     "twit": "^2.2.11"
   }
 }
