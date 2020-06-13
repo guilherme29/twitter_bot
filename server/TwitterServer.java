@@ -24,12 +24,14 @@ public class TwitterServer {
         //timer.schedule(new MyTimeTask(), date);
 
         //Use this if you want to execute it repeatedly
-        int period = 120_000;//2 min
-        timer.schedule(new TwitterServer.Tweeter(), date, period);
+        int normalPeriod = 3600_000;//1 hour
+        int emergencyPeriod = 120_000; //2 minutes
+        timer.schedule(new NormalTweet(), date, normalPeriod);
+        timer.schedule(new EmergencyTweet(), date, emergencyPeriod);
 
     }
 
-    private static class Tweeter extends TimerTask {
+    private static class NormalTweet extends TimerTask {
 
         public void run() {
             int[] rasp;
@@ -55,6 +57,32 @@ public class TwitterServer {
         }
     }
 
+    private static class EmergencyTweet extends TimerTask {
+
+        public void run() {
+            int[] rasp;
+            float[] ardu;
+
+            while(true) try {
+                rasp = readRaspberryTests();
+                ardu = readArduinoTests();
+                break;
+            } catch (IOException e) {
+                try {
+                    sleep(2_000);
+                } catch (InterruptedException interruptedException) {
+                    interruptedException.printStackTrace();
+                }
+            }
+
+            if(rasp[0] < 1000) System.out.println("EMERGENCY");
+//            System.out.println(rasp[0]);
+//            System.out.println(rasp[1]);
+//            System.out.println(ardu[0]);
+//            System.out.println(ardu[1]);
+        }
+    }
+
 
 //        float[] tests = new float[4];
 //        tests[0] = Float.parseFloat(testResultsArray[3]);
@@ -63,6 +91,7 @@ public class TwitterServer {
 //        tests[3] = Float.parseFloat(testResultsArray[6]);
 
         //System.out.println("--->" + tests[0] + " " + tests[1] + " " + tests[2] + " " + tests[3]);
+
 
 
     /**
