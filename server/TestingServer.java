@@ -49,7 +49,7 @@ public class TestingServer {
 
     private static void testArduino() {
         try {
-            String command = "test_arduino.sh";
+            String command = "./test_arduino.sh";
             Runtime.getRuntime().exec(command);
         } catch (IOException e) {
             e.printStackTrace();
@@ -58,7 +58,7 @@ public class TestingServer {
 
     private static void testRaspberry() {
         try {
-            String command = "test_raspberry.sh";
+            String command = "./test_raspberry.sh";
             Runtime.getRuntime().exec(command);
         } catch (IOException e) {
             e.printStackTrace();
