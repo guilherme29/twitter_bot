@@ -9,6 +9,8 @@ import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import static java.lang.Thread.sleep;
+
 public class TwitterServer {
     public static void main(String[] args) throws ParseException {
         //the Date and time at which you want to execute
@@ -30,8 +32,22 @@ public class TwitterServer {
     private static class Tweeter extends TimerTask {
 
         public void run() {
-            int[] rasp = readRaspberryTests();
-            float[] ardu = readArduinoTests();
+            int[] rasp;
+            float[] ardu;
+
+            while(true) try {
+                rasp = readRaspberryTests();
+                ardu = readArduinoTests();
+                break;
+            } catch (IOException e) {
+                try {
+                    sleep(2_000);
+                } catch (InterruptedException interruptedException) {
+                    interruptedException.printStackTrace();
+                }
+            }
+
+
             System.out.println(rasp[0]);
             System.out.println(rasp[1]);
             System.out.println(ardu[0]);
@@ -54,18 +70,13 @@ public class TwitterServer {
      * @return Integer array of size 2.
      * Index 0 contains the temperature and index 1 the humidity.
      */
-    private static int[] readRaspberryTests(){
-        try {
-            String fileContents = readFile("../test_results/raspberry_tests");
-            String[] contentsArray = fileContents.split("\n");
-            int[] results = new int[2];
-            results[0] = Integer.parseInt(contentsArray[0]);
-            results[1] = Integer.parseInt(contentsArray[1]);
-            return results;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
+    private static int[] readRaspberryTests() throws IOException {
+        String fileContents = readFile("../test_results/raspberry_tests");
+        String[] contentsArray = fileContents.split("\n");
+        int[] results = new int[2];
+        results[0] = Integer.parseInt(contentsArray[0]);
+        results[1] = Integer.parseInt(contentsArray[1]);
+        return results;
     }
 
     /**
@@ -73,18 +84,13 @@ public class TwitterServer {
      * @return Float array of size 2.
      * Index 0 contains the moisture level and index 1 the light level.
      */
-    private static float[] readArduinoTests(){
-        try {
-            String fileContents = readFile("../test_results/arduino_tests");
-            String[] contentsArray = fileContents.split("\n");
-            float[] results = new float[2];
-            results[0] = Float.parseFloat(contentsArray[3]);
-            results[1] = Float.parseFloat(contentsArray[4]);
-            return results;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
+    private static float[] readArduinoTests() throws IOException {
+        String fileContents = readFile("../test_results/arduino_tests");
+        String[] contentsArray = fileContents.split("\n");
+        float[] results = new float[2];
+        results[0] = Float.parseFloat(contentsArray[3]);
+        results[1] = Float.parseFloat(contentsArray[4]);
+        return results;
     }
 
 
