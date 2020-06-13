@@ -1,6 +1,4 @@
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -37,21 +35,15 @@ public class TwitterServer {
     private static class NormalTweet extends TimerTask {
 
         public void run() {
-            int[] rasp;
-            float[] ardu;
+            try {
+                int[] rasp = readRaspberryTests();
+                float[] ardu = readArduinoTests();
 
-            while(true) try {
-                rasp = readRaspberryTests();
-                ardu = readArduinoTests();
-                break;
+                normalTweet(ardu, rasp);
+
             } catch (IOException e) {
-                try {
-                    sleep(2_000);
-                } catch (InterruptedException interruptedException) {
-                    interruptedException.printStackTrace();
-                }
+                e.printStackTrace();
             }
-            normalTweet(ardu, rasp);
         }
 
         /**
@@ -82,26 +74,16 @@ public class TwitterServer {
     private static class EmergencyTweet extends TimerTask {
 
         public void run() {
-            int[] rasp;
-            float[] ardu;
+            try {
 
-            while(true) try {
-                rasp = readRaspberryTests();
-                ardu = readArduinoTests();
-                break;
+                int[] rasp = readRaspberryTests();
+                float[] ardu = readArduinoTests();
+
+                System.out.println("EMERGENCY");
+
             } catch (IOException e) {
-                try {
-                    sleep(2_000);
-                } catch (InterruptedException interruptedException) {
-                    interruptedException.printStackTrace();
-                }
+                e.printStackTrace();
             }
-
-            if(rasp[0] < 1000) System.out.println("EMERGENCY");
-//            System.out.println(rasp[0]);
-//            System.out.println(rasp[1]);
-//            System.out.println(ardu[0]);
-//            System.out.println(ardu[1]);
         }
     }
 
@@ -114,6 +96,13 @@ public class TwitterServer {
      * Index 0 contains the temperature and index 1 the humidity.
      */
     private static int[] readRaspberryTests() throws IOException {
+        while(isFileEmpty("../test_results/raspberry_tests")){
+            try {
+                sleep(20_000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
         String fileContents = readFile("../test_results/raspberry_tests");
         String[] contentsArray = fileContents.split("\n");
         int[] results = new int[2];
@@ -128,6 +117,13 @@ public class TwitterServer {
      * Index 0 contains the moisture level and index 1 the light level.
      */
     private static float[] readArduinoTests() throws IOException {
+        while(isFileEmpty("../test_results/arduino_tests")){
+            try {
+                sleep(20_000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
         String fileContents = readFile("../test_results/arduino_tests");
         String[] contentsArray = fileContents.split("\n");
         float[] results = new float[2];
@@ -161,6 +157,25 @@ public class TwitterServer {
             e.printStackTrace();
         }
     }
+
+
+    /**
+     * Given the path to a file checks if the file is empty.
+     * @return True if file is empty, false if not.
+     */
+    private static boolean isFileEmpty(String pathToFile){
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(pathToFile));
+            if (br.readLine() == null) {
+                return true;
+            }
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
 }
 
 
