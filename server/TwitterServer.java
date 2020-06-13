@@ -15,9 +15,7 @@ import static java.lang.Thread.sleep;
 
 public class TwitterServer {
     public static void main(String[] args) throws ParseException {
-        String hello = "helloworld";
-        writeFile(hello, "../twitter/tweet");
-        /*
+
         //the Date and time at which you want to execute
         DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date date = dateFormatter.parse("2020-01-01 00:01:00");
@@ -33,7 +31,7 @@ public class TwitterServer {
         int emergencyPeriod = 120_000; //2 minutes
         timer.schedule(new NormalTweet(), date, normalPeriod);
         timer.schedule(new EmergencyTweet(), date, emergencyPeriod);
-        */
+
     }
 
     private static class NormalTweet extends TimerTask {
@@ -53,12 +51,31 @@ public class TwitterServer {
                     interruptedException.printStackTrace();
                 }
             }
+            normalTweet(ardu, rasp);
+        }
 
+        /**
+         * Given the test values tweets them in the normal periodic tweet format.
+         * @param ardu Test results from the arduino.
+         * @param rasp Test results from the raspberry.
+         */
+        private static void normalTweet(float[] ardu, int[] rasp){
+            float moisture = ardu[0];
+            float light = ardu[1];
+            int temperature = rasp[1];
+            int humidity = rasp[1];
+            String tweet = "soil moisture: " + moisture + "%\n" +
+                    "light: " + light + "%\n" +
+                    "temperature: " + temperature + "ºC\n" +
+                    "humidity: " + humidity + "%\n";
 
-            System.out.println(rasp[0]);
-            System.out.println(rasp[1]);
-            System.out.println(ardu[0]);
-            System.out.println(ardu[1]);
+            writeFile(tweet, "../twitter/tweet");
+            try {
+                String command = "node ../twitter/bot.js ../twitter/tweet";
+                Runtime.getRuntime().exec(command);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -89,19 +106,7 @@ public class TwitterServer {
     }
 
 
-    private static void normalTweet(float[] ardu, int[] rasp){
-        float moisture = ardu[0];
-        float light = ardu[1];
-        int temperature = rasp[1];
-        int humidity = rasp[1];
-        String tweet = "soil moisture: " + moisture + "%\n" +
-                "light: " + light + "%\n" +
-                "temperature: " + temperature + "ºC\n" +
-                "humidity: " + humidity + "%\n";
 
-
-
-    }
 
     /**
      * Reads the saved tests from the Raspberry.
@@ -144,6 +149,11 @@ public class TwitterServer {
     }
 
 
+    /**
+     * Writes the provided string to the file given.
+     * @param text String to write in the file.
+     * @param path Path to the file we want to write to.
+     */
     private static void writeFile(String text, String path){
         try (PrintWriter out = new PrintWriter(path)) {
             out.println(text);
