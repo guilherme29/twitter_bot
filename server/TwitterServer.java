@@ -1,4 +1,6 @@
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -13,6 +15,9 @@ import static java.lang.Thread.sleep;
 
 public class TwitterServer {
     public static void main(String[] args) throws ParseException {
+        String hello = "helloworld";
+        writeFile(hello, "../twitter/tweet");
+        /*
         //the Date and time at which you want to execute
         DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date date = dateFormatter.parse("2020-01-01 00:01:00");
@@ -28,7 +33,7 @@ public class TwitterServer {
         int emergencyPeriod = 120_000; //2 minutes
         timer.schedule(new NormalTweet(), date, normalPeriod);
         timer.schedule(new EmergencyTweet(), date, emergencyPeriod);
-
+        */
     }
 
     private static class NormalTweet extends TimerTask {
@@ -84,15 +89,19 @@ public class TwitterServer {
     }
 
 
-//        float[] tests = new float[4];
-//        tests[0] = Float.parseFloat(testResultsArray[3]);
-//        tests[1] = Float.parseFloat(testResultsArray[4]);
-//        tests[2] = Float.parseFloat(testResultsArray[5]);
-//        tests[3] = Float.parseFloat(testResultsArray[6]);
+    private static void normalTweet(float[] ardu, int[] rasp){
+        float moisture = ardu[0];
+        float light = ardu[1];
+        int temperature = rasp[1];
+        int humidity = rasp[1];
+        String tweet = "soil moisture: " + moisture + "%\n" +
+                "light: " + light + "%\n" +
+                "temperature: " + temperature + "ºC\n" +
+                "humidity: " + humidity + "%\n";
 
-        //System.out.println("--->" + tests[0] + " " + tests[1] + " " + tests[2] + " " + tests[3]);
 
 
+    }
 
     /**
      * Reads the saved tests from the Raspberry.
@@ -132,6 +141,15 @@ public class TwitterServer {
     private static String readFile(String path) throws IOException {
         byte[] encoded = Files.readAllBytes(Paths.get(path));
         return new String(encoded, Charset.defaultCharset());
+    }
+
+
+    private static void writeFile(String text, String path){
+        try (PrintWriter out = new PrintWriter(path)) {
+            out.println(text);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 }
 
