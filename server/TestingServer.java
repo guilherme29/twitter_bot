@@ -25,13 +25,13 @@ public class TestingServer {
 
         //Use this if you want to execute it repeatedly
         int period = 120_000;//2 min
-        timer.schedule(new MyTimeTask(), date, period);
+        timer.schedule(new TestRunner(), date, period);
 
     }
 
 
     //The task which you want to execute
-    private static class MyTimeTask extends TimerTask {
+    private static class TestRunner extends TimerTask {
 
         public void run() {
             testArduino();
