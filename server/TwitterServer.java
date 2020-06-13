@@ -94,7 +94,7 @@ public class TwitterServer {
         private static void emergencyTweet(float[] ardu, int[] rasp) {
             float moisture = ardu[0];
             float light = ardu[1];
-            int temperature = rasp[1];
+            int temperature = rasp[0];
             int humidity = rasp[1];
             String tweet = "";
 
@@ -237,35 +237,6 @@ public class TwitterServer {
     }
 
 }
-
-
-
-
-
-
-
-
-//
-//    /**
-//     * Method to fake tests just for testing
-//     * @return Fake test results
-//     */
-//    private static float[] getFakeTests(){
-//        float[] tests = new float[4];
-//        float moisture = 53;
-//        float light = 91;
-//        float humidity = 56;
-//        float temperature = 24;
-//
-//        tests[0] = moisture;
-//        tests[1] = light;
-//        tests[2] = humidity;
-//        tests[3] = temperature;
-//        return tests;
-//    }
-//
-//        return tests;
-//    }
 
 
 
