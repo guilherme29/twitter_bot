@@ -5,6 +5,7 @@ import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -25,7 +26,7 @@ public class TwitterServer {
         //timer.schedule(new MyTimeTask(), date);
 
         //Use this if you want to execute it repeatedly
-        int normalPeriod = 3600_000;//1 hour
+        int normalPeriod = 14400_000;//4 hour
         int emergencyPeriod = 120_000; //2 minutes
         timer.schedule(new NormalTweet(), date, normalPeriod);
         timer.schedule(new EmergencyTweet(), date, emergencyPeriod);
@@ -78,13 +79,72 @@ public class TwitterServer {
 
                 int[] rasp = readRaspberryTests();
                 float[] ardu = readArduinoTests();
-
-                System.out.println("EMERGENCY");
+                emergencyTweet(ardu, rasp);
 
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
+
+        /**
+         * Given the test values tweets if and only if any of the values feels out of place.
+         * @param ardu Test results from the arduino.
+         * @param rasp Test results from the raspberry.
+         */
+        private static void emergencyTweet(float[] ardu, int[] rasp) {
+            float moisture = ardu[0];
+            float light = ardu[1];
+            int temperature = rasp[1];
+            int humidity = rasp[1];
+            String tweet = "";
+
+            boolean flag = false;
+
+            if(moisture < 20){
+                tweet += "Preciso duma rega, humidade do solo é " + moisture + "%\n";
+                flag = true;
+            }
+            else if(moisture > 95){
+                tweet += "Também não era preciso regar tanto. O solo está " + moisture + "% húmido\n";
+                flag = true;
+            }
+
+            if(temperature < 0){
+                tweet += "Está mesmo frio! " + temperature + "ºC! brr\n";
+                flag = true;
+            }
+            else if(temperature > 30){
+                tweet += "Que tosta, " + temperature + "ºC\n";
+                flag = true;
+            }
+
+
+            Calendar cal = Calendar.getInstance(); //Create Calendar-Object
+            cal.setTime(new Date());               //Set the Calendar to now
+            int hour = cal.get(Calendar.HOUR_OF_DAY); //Get the hour from the calendar
+            if(hour <= 22 && hour >= 8){              // Check if hour is between 8 am and 22
+                if (light < 20){
+                    tweet += "alguém desligou a luz?\n";
+                    flag = true;
+                }
+            }
+
+            if(flag){ //tweets only if there's something important to tweet
+                writeFile(tweet, "../twitter/emergencyTweet");
+                try {
+                    String command = "node ../twitter/bot.js ../twitter/emergencyTweet";
+                    Runtime.getRuntime().exec(command);
+                    try {
+                        sleep(32_400_000); //8 horas
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
     }
 
 
