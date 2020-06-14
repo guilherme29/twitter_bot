@@ -27,8 +27,16 @@ public class TwitterServer {
 
         //Use this if you want to execute it repeatedly
         int normalPeriod = 14400_000;//4 hour
-        int emergencyPeriod = 120_000; //2 minutes
+        int emergencyPeriod = 120_000; //20 minutes
         timer.schedule(new NormalTweet(), date, normalPeriod);
+
+        //waiting a bit just so it doesn't publish 2 tweets in a row at the start
+        try {
+            sleep(120_000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         timer.schedule(new EmergencyTweet(), date, emergencyPeriod);
 
     }
@@ -61,6 +69,8 @@ public class TwitterServer {
                     "light: " + light + "%\n" +
                     "temperature: " + temperature + "ºC\n" +
                     "humidity: " + humidity + "%\n";
+
+            System.out.println("TWEETING:\n" + tweet);
 
             writeFile(tweet, "../twitter/tweet");
             try {
@@ -95,7 +105,7 @@ public class TwitterServer {
             float moisture = ardu[0];
             float light = ardu[1];
             int temperature = rasp[0];
-            int humidity = rasp[1];
+            //int humidity = rasp[1];
             String tweet = "";
 
             boolean flag = false;
@@ -130,6 +140,8 @@ public class TwitterServer {
             }
 
             if(flag){ //tweets only if there's something important to tweet
+                System.out.println("EMERGENCY TWEETING:\n" + tweet);
+
                 writeFile(tweet, "../twitter/emergencyTweet");
                 try {
                     String command = "node ../twitter/bot.js ../twitter/emergencyTweet";
@@ -149,14 +161,13 @@ public class TwitterServer {
 
 
 
-
     /**
      * Reads the saved tests from the Raspberry.
      * @return Integer array of size 2.
      * Index 0 contains the temperature and index 1 the humidity.
      */
     private static int[] readRaspberryTests() throws IOException {
-        while(isFileEmpty("../test_results/raspberry_tests")){
+        while(isFileEmpty("../test_results/raspberry_tests")){ //if file is empty wait
             try {
                 sleep(20_000);
             } catch (InterruptedException e) {
@@ -177,7 +188,7 @@ public class TwitterServer {
      * Index 0 contains the moisture level and index 1 the light level.
      */
     private static float[] readArduinoTests() throws IOException {
-        while(isFileEmpty("../test_results/arduino_tests")){
+        while(isFileEmpty("../test_results/arduino_tests")){ //if file is empty wait
             try {
                 sleep(20_000);
             } catch (InterruptedException e) {
