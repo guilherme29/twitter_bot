@@ -55,7 +55,7 @@ public class TwitterServer {
         private static void normalTweet(float[] ardu, int[] rasp){
             float moisture = ardu[0];
             float light = ardu[1];
-            int temperature = rasp[1];
+            int temperature = rasp[0];
             int humidity = rasp[1];
             String tweet = "soil moisture: " + moisture + "%\n" +
                     "light: " + light + "%\n" +
