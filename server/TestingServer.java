@@ -24,7 +24,7 @@ public class TestingServer {
         //timer.schedule(new MyTimeTask(), date);
 
         //Use this if you want to execute it repeatedly
-        int period = 60_000;//60 segs
+        int period = 120_000;//120 segs
         timer.schedule(new RaspberryTestRunner(), date, period);
         timer.schedule(new ArduinoTestRunner(), date, period);
 
@@ -37,7 +37,7 @@ public class TestingServer {
             do{
                 try {
                     testRaspberry();
-                    sleep(12_000);
+                    sleep(20_000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -69,7 +69,7 @@ public class TestingServer {
             do{
                 try {
                     testArduino();
-                    sleep(12_000);
+                    sleep(20_000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
