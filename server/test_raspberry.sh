@@ -1,6 +1,6 @@
 cd ..
-mkdir test_results
+mkdir tests
 
 # getting temperature and humidity
-node sensors/raspberry.js > test_results/raspberry_tests
+node sensors/raspberry.js > tests/rasp_temp
 

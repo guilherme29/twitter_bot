@@ -1,5 +1,5 @@
 cd ..
-mkdir test_results
+mkdir tests
 
 # getting moisture and light
-node sensors/arduino.js > test_results/arduino_tests
+node sensors/arduino.js > tests/ardu_temp
