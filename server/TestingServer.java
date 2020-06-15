@@ -24,19 +24,17 @@ public class TestingServer {
         //timer.schedule(new MyTimeTask(), date);
 
         //Use this if you want to execute it repeatedly
-        int period = 120_000;//2 min
-        timer.schedule(new TestRunner(), date, period);
+        int period = 30_000;//30 segs
+        timer.schedule(new RaspberryTestRunner(), date, period);
+        timer.schedule(new ArduinoTestRunner(), date, period);
 
     }
 
-
-    //The task which you want to execute
-    private static class TestRunner extends TimerTask {
+    private static class RaspberryTestRunner extends TimerTask {
 
         public void run() {
-            testArduino();
             testRaspberry();
-            while(!isFileEmpty("../test_results/raspberry_tests")){
+            while(!isFileEmpty("../tests/rasp_temp")){
                 try {
                     sleep(12_000);
                     testRaspberry();
@@ -44,26 +42,53 @@ public class TestingServer {
                     e.printStackTrace();
                 }
             }
+            try{
+                String command = "cp ../tests/rasp_temp ../tests/rasp_last";
+                Runtime.getRuntime().exec(command);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        private static void testRaspberry() {
+            try {
+                String command = "./test_raspberry.sh";
+                Runtime.getRuntime().exec(command);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
-    private static void testArduino() {
-        try {
-            String command = "./test_arduino.sh";
-            Runtime.getRuntime().exec(command);
-        } catch (IOException e) {
-            e.printStackTrace();
+    private static class ArduinoTestRunner extends TimerTask {
+
+        public void run() {
+            testArduino();
+            while (!isFileEmpty("../tests/ardu_temp")) {
+                try {
+                    sleep(12_000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            try{
+                String command = "cp ../tests/ardu_temp ../tests/ardu_last";
+                Runtime.getRuntime().exec(command);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        private static void testArduino() {
+            try {
+                String command = "./test_arduino.sh";
+                Runtime.getRuntime().exec(command);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
-    private static void testRaspberry() {
-        try {
-            String command = "./test_raspberry.sh";
-            Runtime.getRuntime().exec(command);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
     /**
      * Given the path to a file checks if the file is empty.
