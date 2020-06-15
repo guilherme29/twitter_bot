@@ -33,15 +33,17 @@ public class TestingServer {
     private static class RaspberryTestRunner extends TimerTask {
 
         public void run() {
-            testRaspberry();
-            while(!isFileEmpty("../tests/rasp_temp")){
+            //do the test until it isn't empty anymore
+            do{
                 try {
-                    sleep(12_000);
                     testRaspberry();
+                    sleep(12_000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-            }
+            } while (!isFileEmpty("../tests/rasp_temp"));
+
+            //copy to a "permanent file"
             try{
                 String command = "cp ../tests/rasp_temp ../tests/rasp_last";
                 Runtime.getRuntime().exec(command);
@@ -63,14 +65,17 @@ public class TestingServer {
     private static class ArduinoTestRunner extends TimerTask {
 
         public void run() {
-            testArduino();
-            while (!isFileEmpty("../tests/ardu_temp")) {
+            //do the test until it isn't empty anymore
+            do{
                 try {
+                    testArduino();
                     sleep(12_000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-            }
+            } while (!isFileEmpty("../tests/ardu_temp"));
+
+            //copy to a "permanent file"
             try{
                 String command = "cp ../tests/ardu_temp ../tests/ardu_last";
                 Runtime.getRuntime().exec(command);
@@ -102,7 +107,8 @@ public class TestingServer {
             }
         }
         catch (IOException e) {
-            e.printStackTrace();
+            //if it doesn't find the file return true;
+            return true;
         }
         return false;
     }
