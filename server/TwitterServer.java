@@ -29,14 +29,6 @@ public class TwitterServer {
         int normalPeriod = 14400_000;//4 hour
         int emergencyPeriod = 120_000; //20 minutes
         timer.schedule(new NormalTweet(), date, normalPeriod);
-
-        //waiting a bit just so it doesn't publish 2 tweets in a row at the start
-        try {
-            sleep(120_000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
         timer.schedule(new EmergencyTweet(), date, emergencyPeriod);
 
     }
@@ -72,13 +64,8 @@ public class TwitterServer {
 
             System.out.println("TWEETING:\n" + tweet);
 
-            writeFile(tweet, "../twitter/tweet");
-            try {
-                String command = "node ../twitter/bot.js ../twitter/tweet";
-                Runtime.getRuntime().exec(command);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            sendTweet("../twitter/normal_tweet", tweet);
+
         }
     }
 
@@ -142,24 +129,22 @@ public class TwitterServer {
             if(flag){ //tweets only if there's something important to tweet
                 System.out.println("EMERGENCY TWEETING:\n" + tweet);
 
-                writeFile(tweet, "../twitter/emergencyTweet");
-                try {
-                    String command = "node ../twitter/bot.js ../twitter/emergencyTweet";
-                    Runtime.getRuntime().exec(command);
-                    try {
-                        sleep(32_400_000); //8 horas
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                sendTweet("../twitter/emergency_tweet", tweet);
             }
         }
 
     }
 
 
+    private static void sendTweet(String filename, String tweet){
+        writeFile(filename, tweet);
+        try {
+            String command = "node ../twitter/bot.js ../twitter/tweet";
+            Runtime.getRuntime().exec(command);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     /**
      * Reads the saved tests from the Raspberry.
@@ -167,14 +152,7 @@ public class TwitterServer {
      * Index 0 contains the temperature and index 1 the humidity.
      */
     private static int[] readRaspberryTests() throws IOException {
-        while(isFileEmpty("../test_results/raspberry_tests")){ //if file is empty wait
-            try {
-                sleep(20_000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-        String fileContents = readFile("../test_results/raspberry_tests");
+        String fileContents = readFile("../test_results/rasp_last");
         String[] contentsArray = fileContents.split("\n");
         int[] results = new int[2];
         results[0] = Integer.parseInt(contentsArray[0]);
@@ -188,14 +166,7 @@ public class TwitterServer {
      * Index 0 contains the moisture level and index 1 the light level.
      */
     private static float[] readArduinoTests() throws IOException {
-        while(isFileEmpty("../test_results/arduino_tests")){ //if file is empty wait
-            try {
-                sleep(20_000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-        String fileContents = readFile("../test_results/arduino_tests");
+        String fileContents = readFile("../tests/ardu_last");
         String[] contentsArray = fileContents.split("\n");
         float[] results = new float[2];
         results[0] = Float.parseFloat(contentsArray[3]);
@@ -221,7 +192,7 @@ public class TwitterServer {
      * @param text String to write in the file.
      * @param path Path to the file we want to write to.
      */
-    private static void writeFile(String text, String path){
+    private static void writeFile(String path, String text){
         try (PrintWriter out = new PrintWriter(path)) {
             out.println(text);
         } catch (FileNotFoundException e) {
