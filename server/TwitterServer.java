@@ -26,7 +26,7 @@ public class TwitterServer {
         //timer.schedule(new MyTimeTask(), date);
 
         //Use this if you want to execute it repeatedly
-        int normalPeriod = 14400_000;//4 hour
+        int normalPeriod = 7200_000;//2 hour
         int emergencyPeriod = 120_000; //20 minutes
         timer.schedule(new NormalTweet(), date, normalPeriod);
         timer.schedule(new EmergencyTweet(), date, emergencyPeriod);
@@ -39,7 +39,6 @@ public class TwitterServer {
             try {
                 int[] rasp = readRaspberryTests();
                 float[] ardu = readArduinoTests();
-
                 normalTweet(ardu, rasp);
 
             } catch (IOException e) {
@@ -61,8 +60,6 @@ public class TwitterServer {
                     "light: " + light + "%\n" +
                     "temperature: " + temperature + "ºC\n" +
                     "humidity: " + humidity + "%\n";
-
-            System.out.println("TWEETING:\n" + tweet);
 
             sendTweet("../twitter/normal_tweet", tweet);
 
@@ -127,8 +124,6 @@ public class TwitterServer {
             }
 
             if(flag){ //tweets only if there's something important to tweet
-                System.out.println("EMERGENCY TWEETING:\n" + tweet);
-
                 sendTweet("../twitter/emergency_tweet", tweet);
             }
         }
@@ -137,6 +132,8 @@ public class TwitterServer {
 
 
     private static void sendTweet(String filename, String tweet){
+        System.out.println("=== SENDING TWEET: ===");
+        System.out.println(tweet);
         writeFile(filename, tweet);
         try {
             String command = "node ../twitter/bot.js ../twitter/tweet";

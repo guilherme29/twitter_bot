@@ -24,7 +24,7 @@ public class TestingServer {
         //timer.schedule(new MyTimeTask(), date);
 
         //Use this if you want to execute it repeatedly
-        int period = 30_000;//30 segs
+        int period = 60_000;//60 segs
         timer.schedule(new RaspberryTestRunner(), date, period);
         timer.schedule(new ArduinoTestRunner(), date, period);
 
