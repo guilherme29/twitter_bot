@@ -201,23 +201,6 @@ public class TwitterServer {
     }
 
 
-    /**
-     * Given the path to a file checks if the file is empty.
-     * @return True if file is empty, false if not.
-     */
-    private static boolean isFileEmpty(String pathToFile){
-        try {
-            BufferedReader br = new BufferedReader(new FileReader(pathToFile));
-            if (br.readLine() == null) {
-                return true;
-            }
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
 }
 
 
