@@ -1,6 +1,8 @@
 
 # Twitter bot for plants
-This is a repository for a node js bot that tweets it's status from time to time.
+This is a repository for raspberry-arduino-sensors system that tweets a plant's status from time to time.
+
+![Photo of the system and the plant](img1.jpg)
 
 ## Materials
 We used an Arduino Uno board coupled with some sensors. You can find them here:
@@ -59,8 +61,11 @@ java TwitterServer >> log_twitter &
 You should now get at least a tweet in your account with your plant status (two if it's conditions aren't ideal).
 Your plant's bot should be 'up and running'!
 
+![Screenshot of our plant tweeting in 2 hour periods](img2.png)
+
 ## Credits
 This project was made by [zeterd][4] and [guilherme29][5].
 
 [4]: https://github.com/Zeterd
 [5]: https://github.com/guilherme29
+
