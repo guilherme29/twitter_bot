@@ -1,4 +1,6 @@
-import java.io.*;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -9,8 +11,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
-
-import static java.lang.Thread.sleep;
 
 public class TwitterServer {
     public static void main(String[] args) throws ParseException {
@@ -89,26 +89,35 @@ public class TwitterServer {
             float moisture = ardu[0];
             float light = ardu[1];
             int temperature = rasp[0];
-            //int humidity = rasp[1];
+            int humidity = rasp[1];
             String tweet = "";
 
             boolean flag = false;
 
             if(moisture < 20){
-                tweet += "Preciso duma rega, humidade do solo é " + moisture + "%\n";
+                tweet += "Preciso duma rega, também tenho sede sabes.\n";
                 flag = true;
             }
-            else if(moisture > 95){
-                tweet += "Também não era preciso regar tanto. O solo está " + moisture + "% húmido\n";
+            else if(moisture > 90){
+                tweet += "Também não era preciso regar tanto.\n";
                 flag = true;
             }
 
-            if(temperature < 0){
-                tweet += "Está mesmo frio! " + temperature + "ºC! brr\n";
+            if(temperature < 5){
+                tweet += "Está mesmo frio! brrrrrr\n";
                 flag = true;
             }
             else if(temperature > 30){
-                tweet += "Que tosta, " + temperature + "ºC\n";
+                tweet += "Que tosta, nossa!\n";
+                flag = true;
+            }
+
+            if(humidity < 10){
+                tweet += "O ar está seco preciso de um copo de água!";
+                flag = true;
+            }
+            else if(humidity > 80){
+                tweet += "Humidade no ar hmmm =)";
                 flag = true;
             }
 
@@ -120,6 +129,11 @@ public class TwitterServer {
                 if (light < 20){
                     tweet += "alguém desligou a luz?\n";
                     flag = true;
+                }
+            }
+            else {
+                if (light > 80){
+                    tweet += "hey desliga a luz que não são horas!\n";
                 }
             }
 
