@@ -45,7 +45,7 @@ public class TestingServer {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-            } while (!isFileEmpty("../tests/rasp_temp"));
+            } while (isFileEmpty("../tests/rasp_temp"));
 
             //copy to a "permanent file"
             try{
@@ -80,7 +80,7 @@ public class TestingServer {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-            } while (!isFileEmpty("../tests/ardu_temp"));
+            } while (isFileEmpty("../tests/ardu_temp"));
 
             //copy to a "permanent file"
             try{
