@@ -149,7 +149,7 @@ public class TwitterServer {
      * Index 0 contains the temperature and index 1 the humidity.
      */
     private static int[] readRaspberryTests() throws IOException {
-        String fileContents = readFile("../test_results/rasp_last");
+        String fileContents = readFile("../tests/rasp_last");
         String[] contentsArray = fileContents.split("\n");
         int[] results = new int[2];
         results[0] = Integer.parseInt(contentsArray[0]);
