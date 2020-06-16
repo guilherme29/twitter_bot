@@ -136,7 +136,7 @@ public class TwitterServer {
         System.out.println(tweet);
         writeFile(filename, tweet);
         try {
-            String command = "node ../twitter/bot.js ../twitter/tweet";
+            String command = "node ../twitter/bot.js " + filename;
             Runtime.getRuntime().exec(command);
         } catch (IOException e) {
             e.printStackTrace();
