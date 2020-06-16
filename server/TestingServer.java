@@ -5,6 +5,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -33,9 +34,12 @@ public class TestingServer {
     private static class RaspberryTestRunner extends TimerTask {
 
         public void run() {
+            Random random = new Random();
+            int k = random.nextInt();
             //do the test until it isn't empty anymore
             do{
                 try {
+                    System.out.println("Testing raspberry " + k);
                     testRaspberry();
                     sleep(20_000);
                 } catch (InterruptedException e) {
@@ -65,9 +69,12 @@ public class TestingServer {
     private static class ArduinoTestRunner extends TimerTask {
 
         public void run() {
+            Random random = new Random();
+            int k = random.nextInt();
             //do the test until it isn't empty anymore
             do{
                 try {
+                    System.out.println("Testing arduino " + k);
                     testArduino();
                     sleep(20_000);
                 } catch (InterruptedException e) {
