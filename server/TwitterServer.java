@@ -26,7 +26,7 @@ public class TwitterServer {
         //timer.schedule(new MyTimeTask(), date);
 
         //Use this if you want to execute it repeatedly
-        int normalPeriod = 7200_000;//2 hour
+        int normalPeriod = 14400_000;//4 hour
         int emergencyPeriod = 300_000; //5 minutes
         timer.schedule(new NormalTweet(), date, normalPeriod);
         timer.schedule(new EmergencyTweet(), date, emergencyPeriod);
